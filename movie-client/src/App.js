@@ -1,40 +1,41 @@
 import './App.css';
 import api from './api/axiosConfig';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Layout from './components/Layout';
-import {Routes, Route} from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './components/home/Home';
 import Header from './components/header/Header';
-function App() {
-  
-  const [movies, setMovies] = useState([]);
-  const getMovies = async ()=>{
+import Trailer from './components/trailer/Trailer';
+import NotFound from './components/notfound/NotFound';
 
-    try{
+function App() {
+  const [movies, setMovies] = useState([]);
+
+  const getMovies = async () => {
+    try {
       const response = await api.get("/api/v1/movies");
       setMovies(response.data);
-    }
-    catch(err){
+    } catch (err) {
       console.error(err);
     }
-    
-  }  
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     getMovies();
-  },[])
+  }, []);
 
   return (
     <div className="App">
-      <Header/>
+      
+      <Header />
       <Routes>
-        <Route path="/" element={<Layout/>}>
-          <Route path="/" element={<Home movies={movies}/>}>
+          <Route path="/" element={<Layout/>}>
+            <Route path="/" element={<Home movies={movies} />} ></Route>
+            <Route path="/Trailer/:ytTrailerId" element={<Trailer/>}></Route>
+           
+            <Route path="*" element = {<NotFound/>}></Route>
           </Route>
-
-        </Route>        
       </Routes>
-
     </div>
   );
 }
